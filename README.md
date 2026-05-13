@@ -55,15 +55,31 @@ A powerful browser extension that enhances your AI prompting experience with int
 
 ## Running from a shared ZIP
 
-If you send someone the ZIP file, they must:
+If you send someone the ZIP file, they must follow these steps:
 
 1. unzip the project folder
-2. run `npm install`
-3. run `npm run build`
+2. open a terminal in the project folder
+3. run `npm install`
+4. run `npm run build`
+5. load the extension from the generated `dist/` folder in the browser
 
-Then they can load the built extension from the `dist/` folder.
+### If you want the ZIP to work without requiring npm install
 
-If you want to share a ready-to-use ZIP, include the `dist/` folder after running `npm run build`.
+1. build the project locally first:
+   ```bash
+   npm install
+   npm run build
+   ```
+2. include the entire `dist/` folder in the ZIP
+3. the recipient can then load the unpacked extension directly from `dist/`
+
+### Loading the built extension
+
+1. Open your browser extension page:
+   - Chrome/Edge: `chrome://extensions/`
+   - Firefox: `about:debugging#/runtime/this-firefox`
+2. Enable **Developer Mode** (Chrome/Edge)
+3. Click **Load unpacked** and choose the `dist/` folder
 
 ## Development
 
