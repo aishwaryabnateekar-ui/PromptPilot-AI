@@ -81,6 +81,20 @@ If you send someone the ZIP file, they must follow these steps:
 2. Enable **Developer Mode** (Chrome/Edge)
 3. Click **Load unpacked** and choose the `dist/` folder
 
+### Free GitHub-built version
+
+If your repository is public, this project automatically builds on every push to `main` and uploads a ready-to-download `dist` artifact.
+
+To use it:
+
+1. Open your repository on GitHub
+2. Go to **Actions**
+3. Open the latest `Build and package extension` workflow run
+4. Download the `promptpilot-ai-dist` artifact
+5. Unzip and load the `dist/` folder as an unpacked extension
+
+This gives users a simple free way to try the extension without running `npm install` or `npm run build` themselves.
+
 ## Development
 
 ### Running in Development Mode
