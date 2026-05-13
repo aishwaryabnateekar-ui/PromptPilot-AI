@@ -53,6 +53,18 @@ A powerful browser extension that enhances your AI prompting experience with int
    npm run build
    ```
 
+## Running from a shared ZIP
+
+If you send someone the ZIP file, they must:
+
+1. unzip the project folder
+2. run `npm install`
+3. run `npm run build`
+
+Then they can load the built extension from the `dist/` folder.
+
+If you want to share a ready-to-use ZIP, include the `dist/` folder after running `npm run build`.
+
 ## Development
 
 ### Running in Development Mode
