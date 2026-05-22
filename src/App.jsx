@@ -634,16 +634,16 @@ function HistoryScreen({ history, onSelect, onClear, onBack, searchQuery, setSea
 export default function App() {
   const [screen, setScreen] = useState('main');
   const [history, setHistory] = useState([]);
- feature/prompt-analytics-dashboard
+ 
   const [analytics, setAnalytics] = useState({
     totalPrompts: 0,
     favorites: 0,
     categories: {},
   });
-=======
+
   const [searchQuery, setSearchQuery] = useState('');
   const [showFavoritesOnly, setShowFavoritesOnly] = useState(false);
- main
+ 'main'
   const [prompts, setPrompts] = useState([]);
   const [selectedPrompt, setSelectedPrompt] = useState(null);
   const [compareVersion, setCompareVersion] = useState(null);

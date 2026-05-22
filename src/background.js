@@ -2,6 +2,8 @@
 // PromptPilot AI — Background Service Worker
 // ═══════════════════════════════════════════════════════════════════════
 
+import { formatAPIError, safeJSONParse } from './utils/errorHandler';
+
 // ── Setup ─────────────────────────────────────────────────────────────
 
 chrome.runtime.onInstalled.addListener(() => {
@@ -47,7 +49,16 @@ chrome.runtime.onMessage.addListener((msg, _sender, sendResponse) => {
   if (msg.type === 'PP_API') {
     callAPI(msg)
       .then((r) => sendResponse({ ok: true, data: r }))
-      .catch((e) => sendResponse({ ok: false, error: e.message }));
+      .catch((e) => {
+        const formatted = formatAPIError('API', e);
+
+        sendResponse({
+          success: false,
+          error: formatted.message,
+          details: formatted,
+        });
+      });
+
     return true;
   }
 });
@@ -166,26 +177,18 @@ async function callAPI({ prompt, domain, mode, provider, apiKey }) {
     .replace(/```\s*$/i, '')
     .trim();
 
-  try {
-    return JSON.parse(cleaned);
-  } catch (_) {
-    return {
-      enhanced_prompt: raw,
-      clarity_score: 30,
-      specificity_score: 30,
-      quality_score: 30,
-      domain_detected: domain || 'general',
-      missing_requirements: [],
-      transformation_insight: 'Enhancement complete.',
-      ambiguities_resolved: [],
-    };
-  }
+ const parsed = safeJSONParse(cleaned);
+
+if (!parsed) {
+  throw new Error('Invalid JSON response from AI');
 }
+
+return parsed;
 
 async function callGemini(sys, userMsg, apiKey) {
   try {
     const res = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey.trim()}`,
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey.trim()}`,
       {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -197,6 +200,7 @@ async function callGemini(sys, userMsg, apiKey) {
       }
     );
     await assertOK(res, 'Gemini');
+    const d = await res.json();
     const text = d?.candidates?.[0]?.content?.parts?.[0]?.text || '';
     if (!text.trim()) {
       throw new Error('Empty Response: AI returned empty response. Try rephrasing your prompt.');
@@ -296,4 +300,5 @@ async function assertOK(res, provider) {
   if (res.status >= 500)
     throw new Error(`Network Error: Can't reach ${provider}. Check your internet connection.`);
   throw new Error(`API Error: ${msg}`);
+}
 }
